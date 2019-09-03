@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<security-constraint>
+		<display-name>Restrict raw XHTML Documents</display-name>
+		<web-resource-collection>
+			<web-resource-name>XHTML</web-resource-name>
+			<url-pattern>*.xhtml</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+
+	<mime-mapping>
+		<extension>ico</extension>
+		<mime-type>image/x-icon</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>eot</extension>
+		<mime-type>application/vnd.ms-fontobject</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>otf</extension>
+		<mime-type>font/opentype</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>ttf</extension>
+		<mime-type>application/x-font-ttf</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/x-font-woff</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>woff2</extension>
+		<mime-type>application/x-font-woff2</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>svg</extension>
+		<mime-type>image/svg+xml</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>jsp</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/redirect?url=/error500.jsf</location>
+	</error-page>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/redirect?url=/error404.jsf</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/redirect?url=/error500.jsf</location>
+	</error-page>
+
+	<servlet>
+		<servlet-name>Redirect Servlet</servlet-name>
+		<servlet-class>configuration.servlet.RedirectServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Redirect Servlet</servlet-name>
+		<url-pattern>/redirect</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<session-config>
+		<session-timeout>180</session-timeout>
+	</session-config>
+
+</web-app>
