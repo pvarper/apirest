@@ -3,6 +3,10 @@ package com.file;
 import java.io.File;
 import java.io.FileWriter;
 
+import javax.ws.rs.core.Response;
+
+import com.entity.Cliente;
+
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
@@ -30,6 +34,11 @@ public class Archivo {
 			log.error("[Archivo] error al crear el directorio y el archivo usuarios",e);
 		}
 		
+	}
+	
+	public Response guardarCliente(Cliente cliente) {
+		
+		return Response.ok("Se guardo correctamente").build();
 	}
 
 }

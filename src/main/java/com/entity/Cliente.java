@@ -11,6 +11,8 @@ public class Cliente {
 	private String telefono;
 	private double saldo;
 	
+	
+	
 	public String getLogin() {
 		return login;
 	}
