@@ -40,5 +40,9 @@ public class Archivo {
 		
 		return Response.ok("Se guardo correctamente").build();
 	}
+	
+	public Response validarSiExisteLogindeUsuario(String login) {
+		return Response.ok(false).build();
+	}
 
 }

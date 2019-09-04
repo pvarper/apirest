@@ -36,5 +36,16 @@ class ArchivoTest {
 		
 		assertEquals(expectedRespuesta,respuesta.getStatusInfo().getReasonPhrase());
 	}
+	
+	@Test
+	void validarSiExisteLogindeUsuarioTest() {
+		Archivo archivo = new Archivo();
+
+		Response respuesta=archivo.validarSiExisteLogindeUsuario("vargasped");
+
+		boolean expectedRespuesta=true;
+		
+		assertEquals(expectedRespuesta,respuesta.getEntity());
+	}
 
 }
