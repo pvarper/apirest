@@ -125,6 +125,14 @@ public class Archivo {
 		}
 
 	}
+	
+	public Result validarClienteCredenciales(String login, String password) {
+
+		respuesta= new Result();
+		respuesta.ok("existe",false);
+		return respuesta;
+
+	}
 
 	public Result obtenerClientePorLogin(String login) {
 

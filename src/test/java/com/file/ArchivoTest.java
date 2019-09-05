@@ -72,5 +72,16 @@ class ArchivoTest {
 
 		assertEquals(expectedRespuesta, respuesta.getData());
 	}
+	
+	@Test
+	void validarClienteCredencialesTest() {
+		Archivo archivo = new Archivo();
+
+		Result respuesta = archivo.validarClienteCredenciales("floresj","asdasd");
+
+		boolean expectedRespuesta = true;
+
+		assertEquals(expectedRespuesta, respuesta.getData());
+	}
 
 }
