@@ -232,6 +232,14 @@ public class Archivo {
 		}
 
 	}
+	
+	public Result actualizarSaldoCliente(double saldo, double montoDepositoORetiro) {
+		
+		respuesta= new Result();
+		respuesta.error("error");
+		return respuesta;
+		
+	}
 
 	public Cliente deStringaObjeto(String linea) {
 		Cliente cliente = new Cliente();

@@ -60,5 +60,17 @@ class ArchivoTest {
 
 		assertEquals(expectedRespuesta, respuesta.getCode());
 	}
+	
+	@Test
+	void actualizarSaldoClienteTest() {
+
+		Archivo archivo = new Archivo();
+
+		Result respuesta = archivo.actualizarSaldoCliente(100, 75);
+		
+		double expectedRespuesta = 25;
+
+		assertEquals(expectedRespuesta, respuesta.getData());
+	}
 
 }
