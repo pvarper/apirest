@@ -48,5 +48,19 @@ class ArchivoTest {
 		
 		assertEquals(expectedRespuesta,respuesta.getEntity());
 	}
+	
+	@Test
+	void obtenerClientePorLoginTest() {
+		Archivo archivo = new Archivo();
+
+		Response respuesta=archivo.obtenerClientePorLogin("floresj");
+		Cliente clienteObtenido=(Cliente)respuesta.getEntity();
+
+
+		//String expectedRespuesta="Se guardo correctamente el usuario " + cliente.getLogin();
+		String expectedNombreCliente="Julio Flores";
+		
+		assertEquals(expectedNombreCliente,clienteObtenido.getNombre()+" "+clienteObtenido.getApellidos());
+	}
 
 }

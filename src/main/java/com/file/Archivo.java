@@ -121,6 +121,10 @@ public class Archivo {
 		
 	}
 	
+	public Response obtenerClientePorLogin(String login) {
+		Cliente cliente= new Cliente();
+		return Response.ok(cliente).build();
+	}
 	
 
 }
