@@ -76,13 +76,20 @@ public class LoginRest implements Serializable {
 	}
 
 	@GET
-	@Path(RestPath.VALIDATE_CREDENCIALES)
+	@Path(RestPath.ACTUALIZAR_SALDO)
 	public Response actualizarSaldoCliente(@QueryParam(RestPath.SALDO_ACTUAL) double saldoActual,
 			@QueryParam(RestPath.MONTO_RETIRO_DEPOSITO) double montoRetiroOdeposito) {
 		try {
-
-			
-			return Response.ok(1).build();
+			log.info("Se actualizara el saldo del cliente: "+saldoActual+","+montoRetiroOdeposito);
+			Archivo archivo = new Archivo();
+			Result respuesta = archivo.actualizarSaldoCliente(saldoActual, montoRetiroOdeposito);
+			if (respuesta.getCode().equals(Code.OK)) {
+					log.info(respuesta.getDescription()+" ,saldo: "+respuesta.getData());
+					return Response.ok(respuesta.getData()).build();
+				
+			}
+			log.info(respuesta.getDescription());
+			return Response.ok(respuesta.getDescription()).build();
 		} catch (Exception e) {
 			log.error("Error al actualiza el saldo del cliente", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

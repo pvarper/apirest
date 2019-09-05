@@ -67,9 +67,9 @@ class LoginRestTest {
 	@Test
 	void actualizarSaldoClienteTest() {
 		LoginRest servicio= new LoginRest();
-		Response respuesta=servicio.actualizarSaldoCliente(500,-200);
+		Response respuesta=servicio.actualizarSaldoCliente(500,200);
 		
-		double responseExpected=300;
+		double responseExpected=700;
 		
 		assertEquals(responseExpected, respuesta.getEntity());
 		
