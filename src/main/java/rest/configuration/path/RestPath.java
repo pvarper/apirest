@@ -28,6 +28,7 @@ public final class RestPath {
     public static final String VALIDATE_CREDENCIALES = "validate_credenciales";
     public static final String SAVE = "save";
     public static final String OBTENER_CLIENTE = "obtener";
+    public static final String ACTUALIZAR_SALDO = "actualizar_saldo";
 
     //endregion
 
@@ -37,6 +38,9 @@ public final class RestPath {
     
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
+    
+    public static final String SALDO_ACTUAL = "saldo_actual";
+    public static final String MONTO_RETIRO_DEPOSITO = "monto_retiro_deposito";
 
 
 
