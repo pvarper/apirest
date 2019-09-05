@@ -2,6 +2,7 @@ package com.file;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -122,8 +123,54 @@ public class Archivo {
 	}
 	
 	public Response obtenerClientePorLogin(String login) {
-		Cliente cliente= new Cliente();
-		return Response.ok(cliente).build();
+		
+		log.info("Se va obtener el cliente con el login: "+login);
+		File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+		Scanner scanner = null;
+		try {
+			// se pasa el flujo al objeto scanner
+			scanner = new Scanner(file);
+			while (scanner.hasNextLine()) {
+				// el objeto scanner lee linea a linea desde el archivo
+				String linea = scanner.nextLine();
+				Scanner delimitar = new Scanner(linea);
+				// se usa una expresión regular
+				// que valida que antes o despues de una coma (,) exista cualquier cosa
+				// parte la cadena recibida cada vez que encuentre una coma
+				delimitar.useDelimiter("\\s*,\\s*");
+				Cliente cliente = new Cliente();
+				cliente.setCi(delimitar.next());
+				cliente.setLogin(delimitar.next());
+				cliente.setPassword(delimitar.next());
+				cliente.setNombre(delimitar.next());
+				cliente.setApellidos(delimitar.next());
+				cliente.setTelefono(delimitar.next());
+				cliente.setSaldo(Double.valueOf(delimitar.next()));
+				delimitar.close();
+				if (login.equalsIgnoreCase(cliente.getLogin())) {
+					log.info("Se obtuvo correctamente el cliente con el login: "+login);
+					return Response.ok(cliente).build();
+				}
+				cliente = new Cliente();
+
+			}
+			// se cierra el ojeto scanner
+			scanner.close();
+			log.info("El cliente con el login "+login +" NO existe");
+			return Response.status(Response.Status.BAD_REQUEST).entity("El cliente con el login "+login +" NO existe").build();
+
+		} catch (FileNotFoundException e) {
+			log.error("Error al obtener cliente con el login "+login,e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		} finally {
+			if (file != null) {
+				file = null;
+			}
+			if (scanner != null) {
+				scanner.close();
+			}
+		}
+
 	}
 	
 
