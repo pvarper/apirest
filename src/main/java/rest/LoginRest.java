@@ -77,5 +77,19 @@ public class LoginRest implements Serializable {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+	
+	@GET
+    @Path(RestPath.OBTENER_CLIENTE)
+    public Response obtenerCliente(@QueryParam(RestPath.LOGIN) String login) {
+        try {
+        	Archivo archivo= new Archivo();
+        	log.info("Se obtendra el cliente "+login);
+        	
+            return Response.ok(false).build();
+        } catch (Exception e) {
+        	log.error("Error al validar el cliente con el login: ",e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 
 }

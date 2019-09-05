@@ -26,6 +26,7 @@ public final class RestPath {
 
     public static final String VALIDATE = "validate";
     public static final String SAVE = "save";
+    public static final String OBTENER_CLIENTE = "obtener";
 
     //endregion
 
