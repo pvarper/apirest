@@ -77,7 +77,7 @@ class ArchivoTest {
 	void validarClienteCredencialesTest() {
 		Archivo archivo = new Archivo();
 
-		Result respuesta = archivo.validarClienteCredenciales("floresj","asdasd");
+		Result respuesta = archivo.validarClienteCredenciales("floresj","tele123");
 
 		boolean expectedRespuesta = true;
 

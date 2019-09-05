@@ -128,9 +128,48 @@ public class Archivo {
 	
 	public Result validarClienteCredenciales(String login, String password) {
 
-		respuesta= new Result();
-		respuesta.ok("existe",false);
-		return respuesta;
+		log.info("Se procedera a validar las credenciales del login: " + login);
+		Scanner scanner = null;
+		respuesta = new Result();
+		try {
+//			log.info("path del file: "+this.file.getAbsolutePath());
+			scanner = new Scanner(this.file);
+			while (scanner.hasNextLine()) {
+				String linea = scanner.nextLine();
+				Scanner delimitar = new Scanner(linea);
+				delimitar.useDelimiter("\\s*,\\s*");
+				Cliente cliente = new Cliente();
+				cliente.setCi(delimitar.next());
+				cliente.setLogin(delimitar.next());
+				cliente.setPassword(delimitar.next());
+				cliente.setNombre(delimitar.next());
+				cliente.setApellidos(delimitar.next());
+				cliente.setTelefono(delimitar.next());
+				cliente.setSaldo(Double.valueOf(delimitar.next()));
+				delimitar.close();
+				if (login.equalsIgnoreCase(cliente.getLogin())&&password.equalsIgnoreCase(cliente.getPassword())) {
+					log.info("Se valido que las credenciales del login " + login + " son correctas");
+					respuesta.ok("Credenciales correctas", true);
+					return respuesta;
+				}
+				cliente = new Cliente();
+
+			}
+			log.info("Se valido que las credenciales del login " + login + " son incorrectas");
+			respuesta.ok("Credenciales incorrectas", false);
+			return respuesta;
+		} catch (Exception e) {
+			log.error("Error al validar las credenciales del login " + login, e);
+			respuesta.error("Error al validar las credenciales del login");
+			return respuesta;
+		} finally {
+			if (file != null) {
+				file = null;
+			}
+			if (scanner != null) {
+				scanner.close();
+			}
+		}
 
 	}
 
