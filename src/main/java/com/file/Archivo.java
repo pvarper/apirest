@@ -1,15 +1,17 @@
 package com.file;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
-import javax.ws.rs.core.Response;
-
 import com.entity.Cliente;
+import com.result.Result;
 
 import lombok.extern.jbosslog.JBossLog;
 
@@ -18,66 +20,71 @@ public class Archivo {
 
 	private static final String nombreDirectorio = "ficheros";
 	private static final String nombreArchivoUsuarios = "usuarios.txt";
-	public  File file;
-	
+	public File file;
+	Result respuesta;
+
 	public Archivo() {
 		try {
-			log.info("si el directorio "+nombreDirectorio+" no existe, se procede a crearlo");
+			log.info("si el directorio " + nombreDirectorio + " no existe, se procede a crearlo");
 			this.file = new File(nombreDirectorio);
 			if (!this.file.exists()) {
 				this.file.mkdir();
-				log.info("se creo el directorio "+nombreDirectorio);
-				log.info("se va crear el archivo "+nombreArchivoUsuarios);
+				log.info("se creo el directorio " + nombreDirectorio);
+				log.info("se va crear el archivo " + nombreArchivoUsuarios);
 				FileWriter flwriter = new FileWriter(this.file.getAbsolutePath() + "\\" + nombreArchivoUsuarios);
-				log.info("se creo el archivo "+nombreArchivoUsuarios);
+				log.info("se creo el archivo " + nombreArchivoUsuarios);
 				flwriter.close();
 			}
-			this.file=new File(nombreDirectorio+"\\"+nombreArchivoUsuarios);
+			this.file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("[Archivo] error al crear el directorio y el archivo usuarios",e);
+			log.error("[Archivo] error al crear el directorio y el archivo usuarios", e);
 		}
-		
+
 	}
-	
-	public Response guardarCliente(Cliente cliente) {
-		log.info("Se validara que el login "+cliente.getLogin()+" no exista para guardarlo");
-		Response response = validarSiExisteLogindeUsuario(cliente.getLogin());
-		if ((boolean)response.getEntity()) {		
-			return Response.ok("No se guardo el usuario " + cliente.getLogin()+", por que este ya existe").build();
-		}
-		log.info("el login "+cliente.getLogin()+" no existe, se procedera a guardarlo");
+
+	public Result guardarCliente(Cliente cliente) {
+		log.info("Se guardar el cliente " + cliente.getLogin());
 		FileWriter flwriter = null;
+		respuesta=new Result();
+		
 		try {
-			flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
-			BufferedWriter bfwriter = new BufferedWriter(flwriter);
-			bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
-					+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
-					+ cliente.getSaldo() + "\n");
 
-			bfwriter.close();
-			log.info("Se guardo correctamente el login " + cliente.getLogin());
-			return Response.ok("Se guardo correctamente el usuario " + cliente.getLogin()).build();
+				
+				flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
+				BufferedWriter bfwriter = new BufferedWriter(flwriter);
+				bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
+						+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
+						+ cliente.getSaldo() + "\n");
 
-		} catch (IOException e) {
-			log.error("error al guardar el login "+cliente.getLogin(),e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		} finally {
+				bfwriter.close();
+				log.info("Se guardo correctamente el login " + cliente.getLogin());
+				respuesta.ok("Se guardo correctamente el login " + cliente.getLogin(), true);
+				return respuesta;
+				
+		
+		} catch (Exception e) {
+			
+			log.error("Error al guardar el cliente", e);
+			respuesta.error("Error al guardar el cliente");
+			return respuesta;
+		}finally {
 			if (flwriter != null) {
 				try {
 					flwriter.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.error("Error al cerrar el bufferedwrite", e);
+					
 				}
 			}
 		}
 	}
-	
-	public Response validarSiExisteLogindeUsuario(String login) {
-		
-		log.info("Se procedera a validar el login: "+login);
+
+	public Result validarSiExisteLogindeUsuario(String login) {
+
+		log.info("Se procedera a validar el login: " + login);
 		Scanner scanner = null;
-		
+		respuesta = new Result();
 		try {
 //			log.info("path del file: "+this.file.getAbsolutePath());
 			scanner = new Scanner(this.file);
@@ -95,18 +102,21 @@ public class Archivo {
 				cliente.setSaldo(Double.valueOf(delimitar.next()));
 				delimitar.close();
 				if (login.equalsIgnoreCase(cliente.getLogin())) {
-					log.info("Se valido que el login "+login +" ya existe");
-					return Response.ok(true).build();
+					log.info("Se valido que el login " + login + " ya existe");
+					respuesta.ok("El login existe", true);
+					return respuesta;
 				}
 				cliente = new Cliente();
 
 			}
-			log.info("Se valido que el login "+login +" NO existe");
-			return Response.ok(false).build();
-		} catch (Exception e) {		
-			log.error("Error al validar el login "+login,e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}finally {
+			log.info("Se valido que el login " + login + " NO existe");
+			respuesta.ok("El login no existe",false);
+			return respuesta;
+		} catch (Exception e) {
+			log.error("Error al validar el login " + login, e);
+			respuesta.error("Error al validar el login");
+			return respuesta;
+		} finally {
 			if (file != null) {
 				file = null;
 			}
@@ -114,16 +124,15 @@ public class Archivo {
 				scanner.close();
 			}
 		}
-		
-		
-		
+
 	}
-	
-	public Response obtenerClientePorLogin(String login) {
-		
-		log.info("Se va obtener el cliente con el login: "+login);
+
+	public Result obtenerClientePorLogin(String login) {
+
+		log.info("Se va obtener el cliente con el login: " + login);
 		File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
 		Scanner scanner = null;
+		respuesta= new Result();
 		try {
 			scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
@@ -140,19 +149,22 @@ public class Archivo {
 				cliente.setSaldo(Double.valueOf(delimitar.next()));
 				delimitar.close();
 				if (login.equalsIgnoreCase(cliente.getLogin())) {
-					log.info("Se obtuvo correctamente el cliente con el login: "+login);
-					return Response.ok(cliente).build();
+					log.info("Se obtuvo correctamente el cliente con el login: " + login);
+					respuesta.ok("Se obtuvo correctamente el cliente con el login: " + login,cliente);
+					return respuesta;
 				}
 				cliente = new Cliente();
 
 			}
 			scanner.close();
-			log.info("El cliente con el login "+login +" NO existe");
-			return Response.status(Response.Status.BAD_REQUEST).entity("El cliente con el login "+login +" NO existe").build();
+			log.info("El cliente con el login " + login + " NO existe");
+			respuesta.ok("El cliente con el login " + login + " NO existe");
+			return respuesta;
 
 		} catch (FileNotFoundException e) {
-			log.error("Error al obtener cliente con el login "+login,e);
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			log.error("Error al obtener cliente con el login " + login, e);
+			respuesta.error("Error al obtener cliente con el login " + login);
+			return respuesta;
 		} finally {
 			if (file != null) {
 				file = null;
@@ -163,11 +175,87 @@ public class Archivo {
 		}
 
 	}
-	
-	public Response eliminarClientePorLogin(String login) {
-		
-		return Response.ok(false).build();
+
+	public Result eliminarClientePorLogin(String login) {
+		log.info("Se eliminar el login " + login );
+		respuesta= new Result();
+		try {
+			
+					
+					File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+					// Construct the new file that will later be renamed to the original filename.
+					File tempFile = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios + ".tmp");
+					if (tempFile.exists()) {
+						if (!tempFile.delete()) {
+							log.info("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+							respuesta.error("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+							return respuesta;
+						}
+					}
+					FileReader fread = new FileReader(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+					BufferedReader br = new BufferedReader(fread);
+					PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+					String line = null;
+					while ((line = br.readLine()) != null) {
+						if (!deStringaObjeto(line).getLogin().equals(login)) {
+							pw.println(line);
+							pw.flush();
+						}
+					}
+					pw.close();
+					pw = null;
+					br.close();
+					br = null;
+					fread.close();
+					fread = null;
+					// Delete the original file
+
+					if (file.exists()) {
+						if (!file.delete()) {
+							log.info("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
+							respuesta.error("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
+							return respuesta;
+						}
+
+					}
+
+
+					if (!tempFile.renameTo(file)) {
+						log.info("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+						respuesta.error("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+						return respuesta;
+					}
+					log.info("Se Elimino correctamente el usuario: " + login);
+					respuesta.ok("Se Elimino correctamente el usuario: " + login);
+					return respuesta;
+					
+
+
+		} catch (FileNotFoundException ex) {
+			log.error("Error al eliminar el cliente "+login,ex);
+			respuesta.error("Error al eliminar el cliente "+login);
+			return respuesta;
+
+		} catch (IOException ex) {
+			log.error("Error al eliminar el cliente "+login,ex);
+			respuesta.error("Error al eliminar el cliente "+login);
+			return respuesta;
+		}
+
 	}
 	
-
+	public Cliente deStringaObjeto(String linea) {
+		Cliente cliente= new Cliente();
+		Scanner delimitar = new Scanner(linea);
+		delimitar.useDelimiter("\\s*,\\s*");
+		cliente.setCi(delimitar.next());
+		cliente.setLogin(delimitar.next());
+		cliente.setPassword(delimitar.next());
+		cliente.setNombre(delimitar.next());
+		cliente.setApellidos(delimitar.next());
+		cliente.setTelefono(delimitar.next());
+		cliente.setSaldo(Double.valueOf(delimitar.next()));
+		delimitar.close();
+		return cliente;
+	}
 }

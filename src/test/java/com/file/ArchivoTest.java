@@ -7,18 +7,20 @@ import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 
 import com.entity.Cliente;
+import com.result.Code;
+import com.result.Result;
 
 class ArchivoTest {
 
 	@Test
 	void creacionDirectorioArchivoTest() {
 		Archivo archivo = new Archivo();
-		boolean inputFile=archivo.file.exists();
-		boolean expectedFile=true;
-		
-		assertEquals(expectedFile,inputFile);
+		boolean inputFile = archivo.file.exists();
+		boolean expectedFile = true;
+
+		assertEquals(expectedFile, inputFile);
 	}
-	
+
 	@Test
 	void guardarClienteTest() {
 		Archivo archivo = new Archivo();
@@ -30,36 +32,35 @@ class ArchivoTest {
 		cliente.setApellidos("Flores");
 		cliente.setTelefono("77809878");
 		cliente.setSaldo(32.54);
-		Response respuesta=archivo.guardarCliente(cliente);
+		Result respuesta = archivo.guardarCliente(cliente);
 
-		//String expectedRespuesta="Se guardo correctamente el usuario " + cliente.getLogin();
-		String expectedRespuesta="No se guardo el usuario " + cliente.getLogin()+", por que este ya existe";
-		
-		assertEquals(expectedRespuesta,respuesta.getEntity());
+		// String expectedRespuesta="Se guardo correctamente el usuario " +
+		// cliente.getLogin();
+		String expectedRespuesta = Code.OK;
+
+		assertEquals(expectedRespuesta, respuesta.getCode());
 	}
-	
+
 	@Test
 	void validarSiExisteLogindeUsuarioTest() {
 		Archivo archivo = new Archivo();
 
-		Response respuesta=archivo.validarSiExisteLogindeUsuario("vargasped");
+		Result respuesta = archivo.validarSiExisteLogindeUsuario("vargasped");
 
-		boolean expectedRespuesta=true;
-		
-		assertEquals(expectedRespuesta,respuesta.getEntity());
+		boolean expectedRespuesta = true;
+
+		assertEquals(expectedRespuesta, respuesta.getData());
 	}
-	
-
 
 	@Test
 	void eliminarClientePorLoginTest() {
-		
+
 		Archivo archivo = new Archivo();
 
-		Response respuesta=archivo.eliminarClientePorLogin("vargasped");
-		boolean expectedRespuesta=true;
-		
-		assertEquals(expectedRespuesta,respuesta.getEntity());
+		Result respuesta = archivo.eliminarClientePorLogin("vargasped");
+		String expectedRespuesta = Code.OK;
+
+		assertEquals(expectedRespuesta, respuesta.getCode());
 	}
 
 }
