@@ -46,35 +46,33 @@ public class Archivo {
 	public Result guardarCliente(Cliente cliente) {
 		log.info("Se guardar el cliente " + cliente.getLogin());
 		FileWriter flwriter = null;
-		respuesta=new Result();
-		
+		respuesta = new Result();
+
 		try {
 
-				
-				flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
-				BufferedWriter bfwriter = new BufferedWriter(flwriter);
-				bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
-						+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
-						+ cliente.getSaldo() + "\n");
+			flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
+			BufferedWriter bfwriter = new BufferedWriter(flwriter);
+			bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
+					+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
+					+ cliente.getSaldo() + "\n");
 
-				bfwriter.close();
-				log.info("Se guardo correctamente el login " + cliente.getLogin());
-				respuesta.ok("Se guardo correctamente el login " + cliente.getLogin(), true);
-				return respuesta;
-				
-		
+			bfwriter.close();
+			log.info("Se guardo correctamente el login " + cliente.getLogin());
+			respuesta.ok("Se guardo correctamente el login " + cliente.getLogin(), true);
+			return respuesta;
+
 		} catch (Exception e) {
-			
+
 			log.error("Error al guardar el cliente", e);
 			respuesta.error("Error al guardar el cliente");
 			return respuesta;
-		}finally {
+		} finally {
 			if (flwriter != null) {
 				try {
 					flwriter.close();
 				} catch (IOException e) {
 					log.error("Error al cerrar el bufferedwrite", e);
-					
+
 				}
 			}
 		}
@@ -110,7 +108,7 @@ public class Archivo {
 
 			}
 			log.info("Se valido que el login " + login + " NO existe");
-			respuesta.ok("El login no existe",false);
+			respuesta.ok("El login no existe", false);
 			return respuesta;
 		} catch (Exception e) {
 			log.error("Error al validar el login " + login, e);
@@ -132,7 +130,7 @@ public class Archivo {
 		log.info("Se va obtener el cliente con el login: " + login);
 		File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
 		Scanner scanner = null;
-		respuesta= new Result();
+		respuesta = new Result();
 		try {
 			scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
@@ -150,7 +148,7 @@ public class Archivo {
 				delimitar.close();
 				if (login.equalsIgnoreCase(cliente.getLogin())) {
 					log.info("Se obtuvo correctamente el cliente con el login: " + login);
-					respuesta.ok("Se obtuvo correctamente el cliente con el login: " + login,cliente);
+					respuesta.ok("Se obtuvo correctamente el cliente con el login: " + login, cliente);
 					return respuesta;
 				}
 				cliente = new Cliente();
@@ -177,75 +175,66 @@ public class Archivo {
 	}
 
 	public Result eliminarClientePorLogin(String login) {
-		log.info("Se eliminar el login " + login );
-		respuesta= new Result();
+		log.info("Se eliminar el login " + login);
+		respuesta = new Result();
 		try {
-			
-					
-					File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
-					// Construct the new file that will later be renamed to the original filename.
-					File tempFile = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios + ".tmp");
-					if (tempFile.exists()) {
-						if (!tempFile.delete()) {
-							log.info("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
-							respuesta.error("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
-							return respuesta;
-						}
-					}
-					FileReader fread = new FileReader(nombreDirectorio + "\\" + nombreArchivoUsuarios);
-					BufferedReader br = new BufferedReader(fread);
-					PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
-					String line = null;
-					while ((line = br.readLine()) != null) {
-						if (!deStringaObjeto(line).getLogin().equals(login)) {
-							pw.println(line);
-							pw.flush();
-						}
-					}
-					pw.close();
-					pw = null;
-					br.close();
-					br = null;
-					fread.close();
-					fread = null;
-					// Delete the original file
-
-					if (file.exists()) {
-						if (!file.delete()) {
-							log.info("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
-							respuesta.error("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
-							return respuesta;
-						}
-
-					}
-
-
-					if (!tempFile.renameTo(file)) {
-						log.info("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
-						respuesta.error("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
-						return respuesta;
-					}
-					log.info("Se Elimino correctamente el usuario: " + login);
-					respuesta.ok("Se Elimino correctamente el usuario: " + login);
+			File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+			File tempFile = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios + ".tmp");
+			if (tempFile.exists()) {
+				if (!tempFile.delete()) {
+					log.info("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+					respuesta.error(
+							"No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
 					return respuesta;
-					
-
+				}
+			}
+			FileReader fread = new FileReader(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+			BufferedReader br = new BufferedReader(fread);
+			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				if (!deStringaObjeto(line).getLogin().equals(login)) {
+					pw.println(line);
+					pw.flush();
+				}
+			}
+			pw.close();
+			pw = null;
+			br.close();
+			br = null;
+			fread.close();
+			fread = null;
+			if (file.exists()) {
+				if (!file.delete()) {
+					log.info("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
+					respuesta.error("No se pudo Eliminar el archivo  de usuarios: " + tempFile.getAbsolutePath());
+					return respuesta;
+				}
+			}
+			if (!tempFile.renameTo(file)) {
+				log.info("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+				respuesta.error("No se pudo renombrar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
+				return respuesta;
+			}
+			log.info("Se Elimino correctamente el usuario: " + login);
+			respuesta.ok("Se Elimino correctamente el usuario: " + login);
+			return respuesta;
 
 		} catch (FileNotFoundException ex) {
-			log.error("Error al eliminar el cliente "+login,ex);
-			respuesta.error("Error al eliminar el cliente "+login);
+			log.error("Error al eliminar el cliente " + login, ex);
+			respuesta.error("Error al eliminar el cliente " + login);
 			return respuesta;
 
 		} catch (IOException ex) {
-			log.error("Error al eliminar el cliente "+login,ex);
-			respuesta.error("Error al eliminar el cliente "+login);
+			log.error("Error al eliminar el cliente " + login, ex);
+			respuesta.error("Error al eliminar el cliente " + login);
 			return respuesta;
 		}
 
 	}
-	
+
 	public Cliente deStringaObjeto(String linea) {
-		Cliente cliente= new Cliente();
+		Cliente cliente = new Cliente();
 		Scanner delimitar = new Scanner(linea);
 		delimitar.useDelimiter("\\s*,\\s*");
 		cliente.setCi(delimitar.next());

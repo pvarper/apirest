@@ -1,8 +1,6 @@
 package com.file;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import javax.ws.rs.core.Response;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +43,7 @@ class ArchivoTest {
 	void validarSiExisteLogindeUsuarioTest() {
 		Archivo archivo = new Archivo();
 
-		Result respuesta = archivo.validarSiExisteLogindeUsuario("vargasped");
+		Result respuesta = archivo.validarSiExisteLogindeUsuario("floresj");
 
 		boolean expectedRespuesta = true;
 
