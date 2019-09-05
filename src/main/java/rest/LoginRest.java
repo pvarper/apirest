@@ -38,8 +38,15 @@ public class LoginRest implements Serializable {
         try {
         	log.info("Se validara el cliente con el login "+login);
         	Archivo archivo= new Archivo();
-        	Result respuesta= new Result();
-            return Response.ok(respuesta.getDescription()).build();
+        	Result respuesta= archivo.validarSiExisteLogindeUsuario(login);
+        	if(respuesta.getCode().equals(Code.OK)) {
+        		if((boolean)respuesta.getData()) {
+        			log.info(respuesta.getDescription());
+        			return Response.ok(respuesta.getData()).build();
+        		}
+        	}
+        	log.info(respuesta.getDescription());
+            return Response.ok(respuesta.getData()).build();
         } catch (Exception e) {
         	log.error("Error al validar el cliente con el login: "+login,e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

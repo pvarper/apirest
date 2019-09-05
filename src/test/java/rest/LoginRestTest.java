@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class LoginRestTest {
 
 	@Test
-	void validarClintePorLoginTest() {
+	void validarClientePorLoginTest() {
 		LoginRest servicio= new LoginRest();
 		Response respuesta=servicio.validarClientePorLogin("floresj");
 		
