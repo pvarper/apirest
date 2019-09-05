@@ -25,6 +25,7 @@ public final class RestPath {
 
 
     public static final String VALIDATE = "validate";
+    public static final String SAVE = "save";
 
     //endregion
 
@@ -32,11 +33,10 @@ public final class RestPath {
     //region Commons Params
 
     
-    public static final String USERNAME = "username";
+    public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
 
-    public static final String GET_CONTRACT = "get-contract";
-    public static final String CONTRACT_ID = "contract_id";
+
 
 
 

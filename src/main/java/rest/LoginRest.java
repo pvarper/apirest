@@ -12,6 +12,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.file.Archivo;
+import com.result.Code;
+import com.result.Result;
+
 import lombok.extern.jbosslog.JBossLog;
 import rest.configuration.path.RestPath;
 
@@ -30,15 +34,14 @@ public class LoginRest implements Serializable {
 
 	@GET
     @Path(RestPath.VALIDATE)
-    public Response restValidateLogin(@QueryParam("username") String login,
-                                      @QueryParam("password") String password) {
+    public Response validarClientePorLogin(@QueryParam(RestPath.LOGIN) String login) {
         try {
-                log.info("restValidateLogin: "+login+","+password);
-           // Optional<LoginEntity> userEntity = loginDao.validateUser(login, password);
-            //   log.info("userEntity.isPresent() : " + userEntity.isPresent());
-            return Response.ok(login+","+password).build();
+        	log.info("Se validara el cliente con el login "+login);
+        	Archivo archivo= new Archivo();
+        	Result respuesta= new Result();
+            return Response.ok(respuesta.getDescription()).build();
         } catch (Exception e) {
-//           log.error(e);
+        	log.error("Error al validar el cliente con el login: "+login,e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }

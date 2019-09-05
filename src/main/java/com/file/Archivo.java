@@ -36,6 +36,7 @@ public class Archivo {
 				flwriter.close();
 			}
 			this.file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+			log.info("path ficheros: "+this.file.getAbsolutePath());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("[Archivo] error al crear el directorio y el archivo usuarios", e);
