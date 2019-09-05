@@ -18,5 +18,16 @@ class LoginRestTest {
 		assertEquals(responseExpected, respuesta.getEntity());
 		
 	}
+	
+	@Test
+	void guardarClienteTest() {
+		LoginRest servicio= new LoginRest();
+		Response respuesta=servicio.guardarCliente("floresj");
+		
+		boolean responseExpected=true;
+		
+		assertEquals(responseExpected, respuesta.getEntity());
+		
+	}
 
 }

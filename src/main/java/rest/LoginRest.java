@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -49,6 +50,19 @@ public class LoginRest implements Serializable {
             return Response.ok(respuesta.getData()).build();
         } catch (Exception e) {
         	log.error("Error al validar el cliente con el login: "+login,e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+	
+	@POST
+    @Path(RestPath.SAVE)
+    public Response guardarCliente(String jsonCliente) {
+        try {
+        	log.info("Se guardara el cliente");
+        	
+            return Response.ok(false).build();
+        } catch (Exception e) {
+        	log.error("Error al validar el cliente con el login: ",e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
