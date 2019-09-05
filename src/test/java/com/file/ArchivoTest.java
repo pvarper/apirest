@@ -53,6 +53,7 @@ class ArchivoTest {
 
 	@Test
 	void eliminarClientePorLoginTest() {
+		
 		Archivo archivo = new Archivo();
 
 		Response respuesta=archivo.eliminarClientePorLogin("vargasped");
