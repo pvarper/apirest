@@ -66,7 +66,7 @@ class ArchivoTest {
 
 		Archivo archivo = new Archivo();
 
-		Result respuesta = archivo.actualizarSaldoCliente(100, 75);
+		Result respuesta = archivo.actualizarSaldoCliente(100, -75);
 		
 		double expectedRespuesta = 25;
 

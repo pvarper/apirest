@@ -234,10 +234,27 @@ public class Archivo {
 	}
 	
 	public Result actualizarSaldoCliente(double saldo, double montoDepositoORetiro) {
-		
-		respuesta= new Result();
-		respuesta.error("error");
-		return respuesta;
+		try {
+
+
+			respuesta= new Result();
+			double saldoRestante = saldo + montoDepositoORetiro;
+			if (saldoRestante < 0) {
+				log.warn("Saldo insuficiente, el monto a retirar es mayor al saldo actual");
+				respuesta.error("Saldo insuficiente, el monto a retirar es mayor al saldo actual");
+				return respuesta;
+			}
+
+			
+			log.info("Se actualizo el saldo correctamente");
+			respuesta.ok("Se actualizo el saldo correctamente",saldoRestante);
+			return respuesta;
+		} catch (Exception e) {
+			log.error("error al actualizar el saldo",e);
+			respuesta.error("error al actualizar el saldo");
+			return respuesta;
+		}
+
 		
 	}
 
