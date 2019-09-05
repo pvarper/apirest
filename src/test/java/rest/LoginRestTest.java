@@ -52,5 +52,16 @@ class LoginRestTest {
 		assertEquals(responseExpected, cliente.getTelefono());
 		
 	}
+	
+	@Test
+	void validarClienteCredencialesTest() {
+		LoginRest servicio= new LoginRest();
+		Response respuesta=servicio.validarClienteCredenciales("floresj","tele123");
+		
+		boolean responseExpected=true;
+		
+		assertEquals(responseExpected, respuesta.getEntity());
+		
+	}
 
 }

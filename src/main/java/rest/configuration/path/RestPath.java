@@ -24,7 +24,8 @@ public final class RestPath {
     //region Common Paths
 
 
-    public static final String VALIDATE = "validate";
+    public static final String VALIDATE_LOGIN = "validate_login";
+    public static final String VALIDATE_CREDENCIALES = "validate_credenciales";
     public static final String SAVE = "save";
     public static final String OBTENER_CLIENTE = "obtener";
 

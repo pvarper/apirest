@@ -36,7 +36,7 @@ public class LoginRest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@GET
-    @Path(RestPath.VALIDATE)
+    @Path(RestPath.VALIDATE_LOGIN)
     public Response validarClientePorLogin(@QueryParam(RestPath.LOGIN) String login) {
         try {
         	log.info("Se validara el cliente con el login "+login);
@@ -50,6 +50,18 @@ public class LoginRest implements Serializable {
         	}
         	log.info(respuesta.getDescription());
             return Response.ok(respuesta.getData()).build();
+        } catch (Exception e) {
+        	log.error("Error al validar el cliente con el login: "+login,e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+	
+	@GET
+    @Path(RestPath.VALIDATE_CREDENCIALES)
+    public Response validarClienteCredenciales(@QueryParam(RestPath.LOGIN) String login,@QueryParam(RestPath.PASSWORD) String password) {
+        try {
+        	
+            return Response.ok("").build();
         } catch (Exception e) {
         	log.error("Error al validar el cliente con el login: "+login,e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
