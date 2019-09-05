@@ -48,12 +48,9 @@ public class Archivo {
 		}
 		log.info("el login "+cliente.getLogin()+" no existe, se procedera a guardarlo");
 		FileWriter flwriter = null;
-		try {// adem�s de la ruta del archivo recibe un par�metro de tipo boolean, que le
-				// indican que se va a�adir m�s registros
+		try {
 			flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
 			BufferedWriter bfwriter = new BufferedWriter(flwriter);
-
-			// escribe los datos en el archivo
 			bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
 					+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
 					+ cliente.getSaldo() + "\n");
@@ -128,15 +125,10 @@ public class Archivo {
 		File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
 		Scanner scanner = null;
 		try {
-			// se pasa el flujo al objeto scanner
 			scanner = new Scanner(file);
 			while (scanner.hasNextLine()) {
-				// el objeto scanner lee linea a linea desde el archivo
 				String linea = scanner.nextLine();
 				Scanner delimitar = new Scanner(linea);
-				// se usa una expresión regular
-				// que valida que antes o despues de una coma (,) exista cualquier cosa
-				// parte la cadena recibida cada vez que encuentre una coma
 				delimitar.useDelimiter("\\s*,\\s*");
 				Cliente cliente = new Cliente();
 				cliente.setCi(delimitar.next());
@@ -154,7 +146,6 @@ public class Archivo {
 				cliente = new Cliente();
 
 			}
-			// se cierra el ojeto scanner
 			scanner.close();
 			log.info("El cliente con el login "+login +" NO existe");
 			return Response.status(Response.Status.BAD_REQUEST).entity("El cliente con el login "+login +" NO existe").build();
