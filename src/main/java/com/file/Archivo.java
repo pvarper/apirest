@@ -1,7 +1,9 @@
 package com.file;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 import javax.ws.rs.core.Response;
@@ -15,7 +17,7 @@ public class Archivo {
 
 	private static final String nombreDirectorio = "ficheros";
 	private static final String nombreArchivoUsuarios = "usuarios.txt";
-	File file;
+	public  File file;
 	
 	public Archivo() {
 		try {
@@ -30,7 +32,6 @@ public class Archivo {
 				flwriter.close();
 			}
 			this.file=new File(nombreDirectorio+"\\"+nombreArchivoUsuarios);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("[Archivo] error al crear el directorio y el archivo usuarios",e);
@@ -39,8 +40,39 @@ public class Archivo {
 	}
 	
 	public Response guardarCliente(Cliente cliente) {
-		
-		return Response.ok("Se guardo correctamente").build();
+		log.info("Se validara que el login "+cliente.getLogin()+" no exista para guardarlo");
+		Response response = validarSiExisteLogindeUsuario(cliente.getLogin());
+		if ((boolean)response.getEntity()) {		
+			return Response.ok("No se guardo el usuario " + cliente.getLogin()+", por que este ya existe").build();
+		}
+		log.info("el login "+cliente.getLogin()+" no existe, se procedera a guardarlo");
+		FileWriter flwriter = null;
+		try {// adem�s de la ruta del archivo recibe un par�metro de tipo boolean, que le
+				// indican que se va a�adir m�s registros
+			flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
+			BufferedWriter bfwriter = new BufferedWriter(flwriter);
+
+			// escribe los datos en el archivo
+			bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
+					+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
+					+ cliente.getSaldo() + "\n");
+
+			bfwriter.close();
+			log.info("Se guardo correctamente el login " + cliente.getLogin());
+			return Response.ok("Se guardo correctamente el usuario " + cliente.getLogin()).build();
+
+		} catch (IOException e) {
+			log.error("error al guardar el login "+cliente.getLogin(),e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		} finally {
+			if (flwriter != null) {
+				try {
+					flwriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	public Response validarSiExisteLogindeUsuario(String login) {
@@ -65,13 +97,13 @@ public class Archivo {
 				cliente.setSaldo(Double.valueOf(delimitar.next()));
 				delimitar.close();
 				if (login.equalsIgnoreCase(cliente.getLogin())) {
-					log.info("Se valido que el login "+login +"existe");
+					log.info("Se valido que el login "+login +" ya existe");
 					return Response.ok(true).build();
 				}
 				cliente = new Cliente();
 
 			}
-			log.info("Se valido que el login "+login +"NO existe");
+			log.info("Se valido que el login "+login +" NO existe");
 			return Response.ok(false).build();
 		} catch (Exception e) {		
 			log.error("Error al validar el login "+login,e);
@@ -88,5 +120,7 @@ public class Archivo {
 		
 		
 	}
+	
+	
 
 }
