@@ -56,7 +56,7 @@ class LoginRestTest {
 	@Test
 	void validarClienteCredencialesTest() {
 		LoginRest servicio= new LoginRest();
-		Response respuesta=servicio.validarClienteCredenciales("floresj","tele123");
+		Response respuesta=servicio.validarClienteCredenciales("vargasped","tele123");
 		
 		boolean responseExpected=true;
 		

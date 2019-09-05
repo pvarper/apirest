@@ -61,9 +61,19 @@ public class LoginRest implements Serializable {
     public Response validarClienteCredenciales(@QueryParam(RestPath.LOGIN) String login,@QueryParam(RestPath.PASSWORD) String password) {
         try {
         	
-            return Response.ok("").build();
+        	log.info("Se validara las credenciales del cliente con el login "+login);
+        	Archivo archivo= new Archivo();
+        	Result respuesta= archivo.validarClienteCredenciales(login, password);
+        	if(respuesta.getCode().equals(Code.OK)) {
+        		if((boolean)respuesta.getData()) {
+        			log.info(respuesta.getDescription());
+        			return Response.ok(respuesta.getData()).build();
+        		}
+        	}
+        	log.info(respuesta.getDescription());
+            return Response.ok(respuesta.getData()).build();
         } catch (Exception e) {
-        	log.error("Error al validar el cliente con el login: "+login,e);
+        	log.error("Error al validar las credenciales el cliente con el login: "+login,e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
