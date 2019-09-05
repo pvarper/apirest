@@ -43,7 +43,7 @@ class ArchivoTest {
 
 		Response respuesta=archivo.validarSiExisteLogindeUsuario("vargasped");
 
-		boolean expectedRespuesta=true;
+		boolean expectedRespuesta=false;
 		
 		assertEquals(expectedRespuesta,respuesta.getEntity());
 	}
