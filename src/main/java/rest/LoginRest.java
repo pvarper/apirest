@@ -80,12 +80,19 @@ public class LoginRest implements Serializable {
 	
 	@GET
     @Path(RestPath.OBTENER_CLIENTE)
-    public Response obtenerCliente(@QueryParam(RestPath.LOGIN) String login) {
+    public Response obtenerClientePorLogin(@QueryParam(RestPath.LOGIN) String login) {
         try {
-        	Archivo archivo= new Archivo();
         	log.info("Se obtendra el cliente "+login);
-        	
-            return Response.ok(false).build();
+        	Archivo archivo= new Archivo();
+        	Result respuesta= archivo.obtenerClientePorLogin(login);
+        	if(respuesta.getCode().equals(Code.OK)) {
+        		if((Cliente)respuesta.getData()!=null) {
+        			log.info(respuesta.getDescription());
+        			return Response.ok(respuesta.getData()).build();
+        		}
+        	}
+        	log.info(respuesta.getDescription());
+            return Response.ok(respuesta.getData()).build();
         } catch (Exception e) {
         	log.error("Error al validar el cliente con el login: ",e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

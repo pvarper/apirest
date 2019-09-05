@@ -42,13 +42,14 @@ class LoginRestTest {
 	}
 	
 	@Test
-	void obtenerClienteTest() {
+	void obtenerClientePorLoginTest() {
 		LoginRest servicio= new LoginRest();
-		Response respuesta=servicio.obtenerCliente("vargasped");
+		Response respuesta=servicio.obtenerClientePorLogin("vargasped");
+		Cliente cliente=(Cliente)respuesta.getEntity();
 		
-		String responseExpected="77802564";
+		String responseExpected="77809878";
 		
-		assertEquals(responseExpected, respuesta.getEntity());
+		assertEquals(responseExpected, cliente.getTelefono());
 		
 	}
 
