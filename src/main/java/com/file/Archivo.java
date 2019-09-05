@@ -45,7 +45,7 @@ public class Archivo {
 	}
 
 	public Result guardarCliente(Cliente cliente) {
-		log.info("Se guardar el cliente " + cliente.getLogin());
+		log.info("Se guardara el cliente " + cliente.getLogin());
 		FileWriter flwriter = null;
 		respuesta = new Result();
 
