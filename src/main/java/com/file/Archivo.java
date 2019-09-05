@@ -164,5 +164,10 @@ public class Archivo {
 
 	}
 	
+	public Response eliminarClientePorLogin(String login) {
+		
+		return Response.ok(false).build();
+	}
+	
 
 }
