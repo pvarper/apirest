@@ -74,5 +74,16 @@ class LoginRestTest {
 		assertEquals(responseExpected, respuesta.getEntity());
 		
 	}
+	
+	@Test
+	void eliminarClientePorLoginTest() {
+		LoginRest servicio= new LoginRest();
+		Response respuesta=servicio.eliminarClientePorLogin("vargasped");
+		
+		boolean responseExpected=true;
+		
+		assertEquals(responseExpected, respuesta.getEntity());
+		
+	}
 
 }

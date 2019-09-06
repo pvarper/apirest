@@ -29,6 +29,7 @@ public final class RestPath {
     public static final String SAVE = "save";
     public static final String OBTENER_CLIENTE = "obtener";
     public static final String ACTUALIZAR_SALDO = "actualizar_saldo";
+    public static final String ELIMINAR_CLIENTE = "eliminar";
 
     //endregion
 

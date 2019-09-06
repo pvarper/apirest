@@ -31,11 +31,11 @@ public class Archivo {
 				this.file.mkdir();
 				log.info("se creo el directorio " + nombreDirectorio);
 				log.info("se va crear el archivo " + nombreArchivoUsuarios);
-				FileWriter flwriter = new FileWriter(this.file.getAbsolutePath() + "\\" + nombreArchivoUsuarios);
+				FileWriter flwriter = new FileWriter(this.file.getAbsolutePath() + File.separator + nombreArchivoUsuarios);
 				log.info("se creo el archivo " + nombreArchivoUsuarios);
 				flwriter.close();
 			}
-			this.file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+			this.file = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios);
 			log.info("path ficheros: "+this.file.getAbsolutePath());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class Archivo {
 
 		try {
 
-			flwriter = new FileWriter(nombreDirectorio + "\\" + nombreArchivoUsuarios, true);
+			flwriter = new FileWriter(nombreDirectorio + File.separator + nombreArchivoUsuarios, true);
 			BufferedWriter bfwriter = new BufferedWriter(flwriter);
 			bfwriter.write(cliente.getCi() + "," + cliente.getLogin() + "," + cliente.getPassword() + ","
 					+ cliente.getNombre() + "," + cliente.getApellidos() + "," + cliente.getTelefono() + ","
@@ -176,7 +176,7 @@ public class Archivo {
 	public Result obtenerClientePorLogin(String login) {
 
 		log.info("Se va obtener el cliente con el login: " + login);
-		File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+		File file = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios);
 		Scanner scanner = null;
 		respuesta = new Result();
 		try {
@@ -226,8 +226,8 @@ public class Archivo {
 		log.info("Se eliminar el login " + login);
 		respuesta = new Result();
 		try {
-			File file = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios);
-			File tempFile = new File(nombreDirectorio + "\\" + nombreArchivoUsuarios + ".tmp");
+			File file = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios);
+			File tempFile = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios + ".tmp");
 			if (tempFile.exists()) {
 				if (!tempFile.delete()) {
 					log.info("No se pudo Eliminar el archivo temporal de usuarios: " + tempFile.getAbsolutePath());
@@ -236,7 +236,7 @@ public class Archivo {
 					return respuesta;
 				}
 			}
-			FileReader fread = new FileReader(nombreDirectorio + "\\" + nombreArchivoUsuarios);
+			FileReader fread = new FileReader(nombreDirectorio + File.separator + nombreArchivoUsuarios);
 			BufferedReader br = new BufferedReader(fread);
 			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
 			String line = null;
@@ -265,7 +265,7 @@ public class Archivo {
 				return respuesta;
 			}
 			log.info("Se Elimino correctamente el usuario: " + login);
-			respuesta.ok("Se Elimino correctamente el usuario: " + login);
+			respuesta.ok("Se Elimino correctamente el usuario: " + login,true);
 			return respuesta;
 
 		} catch (FileNotFoundException ex) {

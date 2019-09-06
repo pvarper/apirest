@@ -95,6 +95,26 @@ public class LoginRest implements Serializable {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
+	
+	@GET
+	@Path(RestPath.ELIMINAR_CLIENTE)
+	public Response eliminarClientePorLogin(@QueryParam(RestPath.LOGIN) String login) {
+		try {
+			log.info("Se eliminara el cliente: "+login);
+			Archivo archivo = new Archivo();
+			Result respuesta = archivo.eliminarClientePorLogin(login);
+			if (respuesta.getCode().equals(Code.OK)) {
+					log.info(respuesta.getDescription());
+					return Response.ok(respuesta.getData()).build();
+				
+			}
+			log.info(respuesta.getDescription());
+			return Response.ok(respuesta.getDescription()).build();
+		} catch (Exception e) {
+			log.error("Error al actualiza el saldo del cliente", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
 
 	@POST
 	@Path(RestPath.SAVE)
@@ -111,7 +131,7 @@ public class LoginRest implements Serializable {
 				}
 			}
 			log.info(respuesta.getDescription());
-			return Response.ok(respuesta.getData()).build();
+			return Response.ok(respuesta.getDescription()).build();
 		} catch (Exception e) {
 			log.error("Error al validar el cliente con el login: ", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
