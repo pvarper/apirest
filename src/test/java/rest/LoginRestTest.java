@@ -2,11 +2,15 @@ package rest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Test;
 
 import com.entity.Cliente;
+import com.entity.Transaccion;
 import com.google.gson.Gson;
 
 class LoginRestTest {
@@ -42,6 +46,24 @@ class LoginRestTest {
 	}
 	
 	@Test
+	void guardarTransacionTest() {
+		LoginRest servicio= new LoginRest();
+		Transaccion transaccion = new Transaccion();
+		transaccion.setLogin("vargasped");
+		transaccion.setFecha(new Timestamp(System.currentTimeMillis()));
+		transaccion.setDeposito(0.0);
+		transaccion.setRetiro(3);
+		transaccion.setSaldo(1.0);
+		transaccion.setSaldo(32.54);
+		Response respuesta=servicio.guardarTransaccionesCliente(new Gson().toJson(transaccion));
+		
+		boolean responseExpected=true;
+		
+		assertEquals(responseExpected, respuesta.getEntity());
+		
+	}
+	
+	@Test
 	void obtenerClientePorLoginTest() {
 		LoginRest servicio= new LoginRest();
 		Response respuesta=servicio.obtenerClientePorLogin("vargasped");
@@ -50,6 +72,18 @@ class LoginRestTest {
 		String responseExpected="77809878";
 		
 		assertEquals(responseExpected, cliente.getTelefono());
+		
+	}
+	
+	@Test
+	void obtenerTrasanccionesClientePorLogin() {
+		LoginRest servicio= new LoginRest();
+		Response respuesta=servicio.obtenerTrasanccionesClientePorLogin("vargasped");
+		List<Transaccion> listaTransacciones=(List<Transaccion>)respuesta.getEntity();
+		
+		int responseExpected=3;
+		
+		assertEquals(responseExpected, listaTransacciones.size());
 		
 	}
 	

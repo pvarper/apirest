@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.entity.Cliente;
+import com.entity.Transaccion;
 import com.file.Archivo;
 import com.google.gson.Gson;
 import com.result.Code;
@@ -133,7 +134,29 @@ public class LoginRest implements Serializable {
 			log.info(respuesta.getDescription());
 			return Response.ok(respuesta.getDescription()).build();
 		} catch (Exception e) {
-			log.error("Error al validar el cliente con el login: ", e);
+			log.error("Error al guardar el cliente: ", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+	
+	@POST
+	@Path(RestPath.SAVE_TRANSACCION)
+	public Response guardarTransaccionesCliente(String jsonTransaccionCliente) {
+		try {
+			Archivo archivo = new Archivo();
+			Transaccion transaccion = new Gson().fromJson(jsonTransaccionCliente, Transaccion.class);
+			log.info("Se guardara la transaccion del cliente " + transaccion.getLogin());
+			Result respuesta = archivo.guardarTransaccionesCliente(transaccion);
+			if (respuesta.getCode().equals(Code.OK)) {
+				if ((boolean) respuesta.getData()) {
+					log.info(respuesta.getDescription());
+					return Response.ok(respuesta.getData()).build();
+				}
+			}
+			log.info(respuesta.getDescription());
+			return Response.ok(respuesta.getDescription()).build();
+		} catch (Exception e) {
+			log.error("Error guardar la transaccion del cliente", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
@@ -155,6 +178,26 @@ public class LoginRest implements Serializable {
 			return Response.ok(respuesta.getData()).build();
 		} catch (Exception e) {
 			log.error("Error al validar el cliente con el login: ", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+	}
+	
+	@GET
+	@Path(RestPath.OBTENER_TRANSACCION)
+	public Response obtenerTrasanccionesClientePorLogin(@QueryParam(RestPath.LOGIN) String login) {
+		try {
+			log.info("Se obtendra las trsnsacciones del cliente " + login);
+			Archivo archivo = new Archivo();
+			Result respuesta = archivo.obtenerTrasanccionesClientePorLogin(login);
+			if (respuesta.getCode().equals(Code.OK)) {
+
+			  return Response.ok(respuesta.getData()).build();
+
+			}
+			log.info(respuesta.getDescription());
+			return Response.ok(respuesta.getData()).build();
+		} catch (Exception e) {
+			log.error("Error al obtener las transacciones del cliente con el login: ", e);
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}

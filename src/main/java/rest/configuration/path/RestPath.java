@@ -27,7 +27,9 @@ public final class RestPath {
     public static final String VALIDATE_LOGIN = "validate_login";
     public static final String VALIDATE_CREDENCIALES = "validate_credenciales";
     public static final String SAVE = "save";
+    public static final String SAVE_TRANSACCION = "save_transaccion";
     public static final String OBTENER_CLIENTE = "obtener";
+    public static final String OBTENER_TRANSACCION = "obtener_transaccion";
     public static final String ACTUALIZAR_SALDO = "actualizar_saldo";
     public static final String ELIMINAR_CLIENTE = "eliminar";
 
