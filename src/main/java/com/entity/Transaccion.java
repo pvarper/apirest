@@ -1,10 +1,15 @@
 package com.entity;
 
+
+
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Transaccion {
 	
 	private String login;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp fecha;
 	private double deposito;
 	private double retiro;

@@ -1,6 +1,7 @@
 package rest;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -145,6 +146,7 @@ public class LoginRest implements Serializable {
 		try {
 			Archivo archivo = new Archivo();
 			Transaccion transaccion = new Gson().fromJson(jsonTransaccionCliente, Transaccion.class);
+			transaccion.setFecha(new Timestamp(System.currentTimeMillis()));
 			log.info("Se guardara la transaccion del cliente " + transaccion.getLogin());
 			Result respuesta = archivo.guardarTransaccionesCliente(transaccion);
 			if (respuesta.getCode().equals(Code.OK)) {
@@ -201,5 +203,7 @@ public class LoginRest implements Serializable {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
+	
+	
 
 }
