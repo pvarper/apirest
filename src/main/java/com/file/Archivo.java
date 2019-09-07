@@ -8,9 +8,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import com.entity.Cliente;
+import com.entity.Transaccion;
 import com.result.Result;
 
 import lombok.extern.jbosslog.JBossLog;
@@ -20,23 +24,30 @@ public class Archivo {
 
 	private static final String nombreDirectorio = "ficheros";
 	private static final String nombreArchivoUsuarios = "usuarios.txt";
-	public File file;
+	private static final String nombreArchivoTransacciones = "transacciones.txt";
+	public File fileUsuario;
+	public File fileTransacciones;
 	Result respuesta;
 
 	public Archivo() {
 		try {
 			log.info("si el directorio " + nombreDirectorio + " no existe, se procede a crearlo");
-			this.file = new File(nombreDirectorio);
-			if (!this.file.exists()) {
-				this.file.mkdir();
+			this.fileUsuario = new File(nombreDirectorio);
+			if (!this.fileUsuario.exists()) {
+				this.fileUsuario.mkdir();
 				log.info("se creo el directorio " + nombreDirectorio);
 				log.info("se va crear el archivo " + nombreArchivoUsuarios);
-				FileWriter flwriter = new FileWriter(this.file.getAbsolutePath() + File.separator + nombreArchivoUsuarios);
-				log.info("se creo el archivo " + nombreArchivoUsuarios);
+				FileWriter flwriter = new FileWriter(this.fileUsuario.getAbsolutePath() + File.separator + nombreArchivoUsuarios);
 				flwriter.close();
+				flwriter = new FileWriter(this.fileUsuario.getAbsolutePath() + File.separator + nombreArchivoTransacciones);
+				flwriter.close();
+				log.info("se creo el archivo " + nombreArchivoUsuarios);
+				log.info("se creo el archivo " + nombreArchivoTransacciones);
+				
 			}
-			this.file = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios);
-			log.info("path ficheros: "+this.file.getAbsolutePath());
+			this.fileUsuario = new File(nombreDirectorio + File.separator + nombreArchivoUsuarios);
+			this.fileTransacciones = new File(nombreDirectorio + File.separator + nombreArchivoTransacciones);
+			log.info("path ficheros: "+this.fileUsuario.getAbsolutePath());
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("[Archivo] error al crear el directorio y el archivo usuarios", e);
@@ -78,6 +89,40 @@ public class Archivo {
 			}
 		}
 	}
+	
+	public Result guardarTransaccionesCliente(Transaccion transaccion) {
+		log.info("Se guardara la transaccion " + transaccion.toString());
+		FileWriter flwriter = null;
+		respuesta = new Result();
+
+		try {
+
+			flwriter = new FileWriter(nombreDirectorio + File.separator + nombreArchivoTransacciones, true);
+			BufferedWriter bfwriter = new BufferedWriter(flwriter);
+			bfwriter.write(transaccion.getLogin() + "," + transaccion.getFecha() + "," + transaccion.getDeposito() + ","
+					+ transaccion.getRetiro() + "," + transaccion.getSaldo() + "\n");
+
+			bfwriter.close();
+			log.info("Se guardo correctamente la transaccion " + transaccion.toString());
+			respuesta.ok("Se guardo correctamente la transaccion " + transaccion.toString(), true);
+			return respuesta;
+
+		} catch (Exception e) {
+
+			log.error("Error al guardar el cliente", e);
+			respuesta.error("Error al guardar el cliente");
+			return respuesta;
+		} finally {
+			if (flwriter != null) {
+				try {
+					flwriter.close();
+				} catch (IOException e) {
+					log.error("Error al cerrar el bufferedwrite", e);
+
+				}
+			}
+		}
+	}
 
 	public Result validarSiExisteLogindeUsuario(String login) {
 
@@ -86,7 +131,7 @@ public class Archivo {
 		respuesta = new Result();
 		try {
 //			log.info("path del file: "+this.file.getAbsolutePath());
-			scanner = new Scanner(this.file);
+			scanner = new Scanner(this.fileUsuario);
 			while (scanner.hasNextLine()) {
 				String linea = scanner.nextLine();
 				Scanner delimitar = new Scanner(linea);
@@ -116,8 +161,8 @@ public class Archivo {
 			respuesta.error("Error al validar el login");
 			return respuesta;
 		} finally {
-			if (file != null) {
-				file = null;
+			if (fileUsuario != null) {
+				fileUsuario = null;
 			}
 			if (scanner != null) {
 				scanner.close();
@@ -133,7 +178,7 @@ public class Archivo {
 		respuesta = new Result();
 		try {
 //			log.info("path del file: "+this.file.getAbsolutePath());
-			scanner = new Scanner(this.file);
+			scanner = new Scanner(this.fileUsuario);
 			while (scanner.hasNextLine()) {
 				String linea = scanner.nextLine();
 				Scanner delimitar = new Scanner(linea);
@@ -163,8 +208,8 @@ public class Archivo {
 			respuesta.error("Error al validar las credenciales del login");
 			return respuesta;
 		} finally {
-			if (file != null) {
-				file = null;
+			if (fileUsuario != null) {
+				fileUsuario = null;
 			}
 			if (scanner != null) {
 				scanner.close();
@@ -304,6 +349,60 @@ public class Archivo {
 		}
 
 		
+	}
+	
+	public Result obtenerTrasanccionesClientePorLogin(String login) {
+
+		log.info("Se va obtener las transacciones del cliente con el login: " + login);
+		File file = new File(nombreDirectorio + File.separator + nombreArchivoTransacciones);
+		Scanner scanner = null;
+		respuesta = new Result();
+		List<Transaccion> listaTransacciones= new ArrayList<Transaccion>();
+		try {
+			scanner = new Scanner(file);
+			while (scanner.hasNextLine()) {
+				String linea = scanner.nextLine();
+				Scanner delimitar = new Scanner(linea);
+				delimitar.useDelimiter("\\s*,\\s*");
+				Transaccion transacciones= new Transaccion();
+				transacciones.setLogin(delimitar.next());
+				Timestamp fechaTransaccion = Timestamp.valueOf(delimitar.next());
+				transacciones.setFecha(fechaTransaccion);
+				double montoTransaccion=Double.valueOf(delimitar.next());
+				transacciones.setDeposito(montoTransaccion);
+				montoTransaccion=Double.valueOf(delimitar.next());
+				transacciones.setRetiro(montoTransaccion);
+				montoTransaccion=Double.valueOf(delimitar.next());
+				transacciones.setSaldo(montoTransaccion);
+				delimitar.close();
+				if (login.equalsIgnoreCase(transacciones.getLogin())) {
+					listaTransacciones.add(transacciones);
+					
+				}
+				transacciones= new Transaccion();
+
+			}
+			scanner.close();
+			log.info("Se obtuvo correctamente las transacciones del cliente con el login: " + login);
+			respuesta.ok("Se obtuvo correctamente las transacciones el cliente con el login: " + login, listaTransacciones);
+			return respuesta;
+
+			
+
+
+		} catch (FileNotFoundException e) {
+			log.error("Error al obtener las transacciones del cliente con el login " + login, e);
+			respuesta.error("Error al obtener las transacciones del cliente con el login " + login);
+			return respuesta;
+		} finally {
+			if (file != null) {
+				file = null;
+			}
+			if (scanner != null) {
+				scanner.close();
+			}
+		}
+
 	}
 
 	public Cliente deStringaObjeto(String linea) {
